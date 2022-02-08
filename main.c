@@ -10,8 +10,18 @@ int main(int argc, char **argv)
     
    //dico= arbreCons('a', 0, NULL, NULL);
     strcpy(buffer, "gallon");
-    dicoInsererMot(buffer, &dico);
+     dicoInsererMot(buffer, &dico);
+        strcpy(buffer, "all");
+         dicoInsererMot(buffer, &dico);
+            strcpy(buffer, "maison");
+                 dicoInsererMot(buffer, &dico);
+//strcpy(buffer, "maison");
+
+   // dicoInsererMot(buffer, &dico);
     dicoAfficher(dico);
+    int x;
+    x= dicoNbMotsDifferents(dico);
+    printf("%d x=",x);
     
 }
 

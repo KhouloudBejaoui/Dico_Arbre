@@ -53,21 +53,55 @@ int piocherMot(char *motPioche)
     return 1;
 }
 
-void dicoAfficher(TArbre a)
+/*void dicoAfficher(TArbre a)
 {
     if (arbreEstVide(a) == 0)
         printf("arbre vide");
 
     else
     {
-       // printf("%c", (a->lettre));
-       printf("123");
+        // printf("%c", (a->lettre));
+        printf("123");
         //dicoAfficher((a->fg));
     }
     //dicoAfficher((a->fd));
+}*/
+void afficherElements(char mot[], TArbre a)
+{
+    char end = '\0';
+
+    if (a != NULL)
+    {
+        if (arbreRacineLettre(a) != end)
+        {
+            if (a->fg != NULL)
+            {
+                afficherElements(mot, a->fd);
+            }
+            if (a->fg != NULL)
+            {
+                strcat(mot, (char[2]){arbreRacineLettre(a), end});
+                afficherElements(mot, arbreFilsGauche(a));
+            }
+            mot[strlen(mot) - 1] = end;
+        }
+        else
+        {
+            printf("\"%s\"\n", mot);
+            if (a->fd != NULL)
+                afficherElements(mot, arbreFilsDroit(a));
+        }
+    }
 }
 
-void dicoInsererMot(char mot[], TArbre *a)
+void dicoAfficher(TArbre a)
+{
+    printf("\nListe des mots:\n");
+    char mots[255] = "";
+    afficherElements(mots, a);
+}
+
+/*void dicoInsererMot(char mot[], TArbre *a)
 {
     int i = 0;
     TArbre r, p;
@@ -76,26 +110,26 @@ void dicoInsererMot(char mot[], TArbre *a)
 
     if (arbreEstVide(*a) == 0)
     {
+
         (*a) = arbreCons(mot[0], 0, NULL, NULL);
-        
-        //printf("%c", (*a)->lettre);
+        p = *a;
+        printf("%c", (p)->lettre);
+
         while (i <= strlen(mot))
         {
             if (i == strlen(mot))
             {
                 (*a) = arbreCons('\0', 1, NULL, NULL);
-               
             }
             else
             {
-                p = arbreCons(mot[i], 0, NULL, NULL);
-                (*a)->fg=p;
+                r = arbreCons(mot[i], 0, NULL, NULL);
+                (*a)->fg = r;
             }
             i++;
         }
-       // p=p->fg;
-        printf("%c", (*a)->lettre);
-        
+        // p=p->fg;
+        printf("%c", (p)->fg->lettre);
     }
 
     else
@@ -113,12 +147,12 @@ void dicoInsererMot(char mot[], TArbre *a)
                 if (i == strlen(mot))
                 {
                     (*a) = arbreCons('\0', 1, NULL, NULL);
-                    *a= arbreFilsGauche(*a);
+                    *a = arbreFilsGauche(*a);
                 }
                 else
                 {
                     (*a) = arbreCons(mot[i], 0, NULL, NULL);
-                    *a= arbreFilsGauche(*a);
+                    *a = arbreFilsGauche(*a);
                 }
                 i++;
             }
@@ -148,12 +182,12 @@ void dicoInsererMot(char mot[], TArbre *a)
                     if (i == strlen(mot))
                     {
                         (*a) = arbreCons('\0', 1, NULL, NULL);
-                        *a=arbreFilsGauche(*a);
+                        *a = arbreFilsGauche(*a);
                     }
                     else
                     {
                         (*a) = arbreCons(mot[i], 0, NULL, NULL);
-                        *a=arbreFilsGauche(*a);
+                        *a = arbreFilsGauche(*a);
                     }
                     i++;
                 }
@@ -164,7 +198,7 @@ void dicoInsererMot(char mot[], TArbre *a)
             }
         }
     }
-}
+}*/
 
 int dicoNbOcc(char mot[], TArbre a)
 {
@@ -183,39 +217,39 @@ int dicoNbOcc(char mot[], TArbre a)
         }
         else
         {
-            return 0;  
+            return 0;
         }
-        
+
         if (i == strlen(mot))
         {
             nb = a->nb;
-        }else
-        {
-            if ((a->lettre)=='\0')
-            {
-                a=a->fd;//chercher 
-            } 
         }
-        
-
+        else
+        {
+            if ((a->lettre) == '\0')
+            {
+                a = a->fd; //chercher
+            }
+        }
     }
 }
 
 int dicoNbMotsDifferents(TArbre a)
 {
-    int nb = 0;
-    if (arbreEstVide(a) == 0)
+    char end = '\0';
+    if (!arbreEstVide(a))
     {
-        return 0;
+        if (arbreRacineLettre(a) == end)
+        {
+            return 1 + dicoNbMotsDifferents(arbreFilsGauche(a)) + dicoNbMotsDifferents(arbreFilsDroit(a));
+        }
+
+        return dicoNbMotsDifferents(arbreFilsGauche(a)) + dicoNbMotsDifferents(arbreFilsDroit(a));
     }
     else
     {
-        if (a->lettre == '\0')
-        {
-            nb++;
-        }
+        return 0;
     }
-    return nb + dicoNbMotsTotal(a->fg) + dicoNbMotsTotal(a->fd);
 }
 
 int dicoNbMotsTotal(TArbre a)
@@ -233,4 +267,54 @@ int dicoNbMotsTotal(TArbre a)
         }
     }
     return nb + dicoNbMotsTotal(a->fg) + dicoNbMotsTotal(a->fd);
+}
+
+void dicoInsererMot(char mot[], TArbre *pa)
+{
+    char end = '\0';
+    if (*pa != NULL)
+    {
+        if (mot[0] != end)
+        {
+            if ((*pa)->lettre == mot[0])
+            {
+                mot++;
+                dicoInsererMot(mot, &((*pa)->fg));
+            }
+            else
+            {
+                if ((*pa)->fd != NULL)
+                {
+                    dicoInsererMot(mot, &((*pa)->fd));
+                }
+                else
+                {
+                    (*pa)->fd = arbreCons(mot[0], 0, NULL, NULL);
+                    dicoInsererMot(mot, &(*pa));
+                }
+            }
+        }
+        else if ((*pa)->lettre != end && mot[0] == end)
+        {
+            TArbre a = arbreCons(end, 1, NULL, *pa);
+            *pa = a;
+        }
+        else if ((*pa)->lettre == end && mot[0] == end)
+        {
+            (*pa)->nb = (*pa)->nb + 1;
+        }
+    }
+    else
+    {
+        if (mot[0] != end)
+        {
+            *pa = arbreCons(mot[0], 0, NULL, NULL);
+            mot++;
+            dicoInsererMot(mot, &((*pa)->fg));
+        }
+        else
+        {
+            *pa = arbreCons(end, 1, NULL, NULL);
+        }
+    }
 }

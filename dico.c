@@ -53,19 +53,6 @@ int piocherMot(char *motPioche)
     return 1;
 }
 
-/*void dicoAfficher(TArbre a)
-{
-    if (arbreEstVide(a) == 0)
-        printf("arbre vide");
-
-    else
-    {
-        // printf("%c", (a->lettre));
-        printf("123");
-        //dicoAfficher((a->fg));
-    }
-    //dicoAfficher((a->fd));
-}*/
 void afficherElements(char mot[], TArbre a)
 {
     char end = '\0';
@@ -99,174 +86,6 @@ void dicoAfficher(TArbre a)
     printf("\nListe des mots:\n");
     char mots[255] = "";
     afficherElements(mots, a);
-}
-
-/*void dicoInsererMot(char mot[], TArbre *a)
-{
-    int i = 0;
-    TArbre r, p;
-    r = (TArbre)malloc(sizeof(struct noeud));
-    p = (TArbre)malloc(sizeof(struct noeud));
-
-    if (arbreEstVide(*a) == 0)
-    {
-
-        (*a) = arbreCons(mot[0], 0, NULL, NULL);
-        p = *a;
-        printf("%c", (p)->lettre);
-
-        while (i <= strlen(mot))
-        {
-            if (i == strlen(mot))
-            {
-                (*a) = arbreCons('\0', 1, NULL, NULL);
-            }
-            else
-            {
-                r = arbreCons(mot[i], 0, NULL, NULL);
-                (*a)->fg = r;
-            }
-            i++;
-        }
-        // p=p->fg;
-        printf("%c", (p)->fg->lettre);
-    }
-
-    else
-    {
-        while (((*a)->lettre) != mot[0] && ((*a)->fd) != NULL)
-        {
-            (*a) = arbreFilsDroit(*a);
-        }
-
-        if ((*a)->fd == NULL)
-        {
-            (*a) = arbreCons(mot[0], 0, NULL, NULL);
-            while (i <= strlen(mot))
-            {
-                if (i == strlen(mot))
-                {
-                    (*a) = arbreCons('\0', 1, NULL, NULL);
-                    *a = arbreFilsGauche(*a);
-                }
-                else
-                {
-                    (*a) = arbreCons(mot[i], 0, NULL, NULL);
-                    *a = arbreFilsGauche(*a);
-                }
-                i++;
-            }
-        }
-        else
-        {
-            i = 1;
-            while (((*a)->lettre) == mot[i] && ((*a)->fg) != NULL)
-            {
-
-                if (i == strlen(mot) && ((*a)->fg) != '\0')
-                {
-                    r = arbreFilsGauche(*a);
-                    (*a)->fg = arbreCons('\0', 0, NULL, r);
-                }
-                else
-                {
-                    (*a) = arbreFilsGauche(*a);
-                    i++;
-                }
-            }
-            if ((*a)->lettre != mot[i])
-            {
-                (*a) = arbreCons(mot[i], 0, NULL, NULL);
-                while (i <= strlen(mot))
-                {
-                    if (i == strlen(mot))
-                    {
-                        (*a) = arbreCons('\0', 1, NULL, NULL);
-                        *a = arbreFilsGauche(*a);
-                    }
-                    else
-                    {
-                        (*a) = arbreCons(mot[i], 0, NULL, NULL);
-                        *a = arbreFilsGauche(*a);
-                    }
-                    i++;
-                }
-            }
-            else
-            {
-                ((*a)->nb)++;
-            }
-        }
-    }
-}*/
-
-int dicoNbOcc(char mot[], TArbre a)
-{
-    int nb, i = 0;
-
-    if (arbreEstVide(a) == 0)
-    {
-        return 0;
-    }
-    while (i <= strlen(mot))
-    {
-        if ((a->lettre == mot[i]))
-        {
-            a = a->fg;
-            i++;
-        }
-        else
-        {
-            return 0;
-        }
-
-        if (i == strlen(mot))
-        {
-            nb = a->nb;
-        }
-        else
-        {
-            if ((a->lettre) == '\0')
-            {
-                a = a->fd; //chercher
-            }
-        }
-    }
-}
-
-int dicoNbMotsDifferents(TArbre a)
-{
-    char end = '\0';
-    if (!arbreEstVide(a))
-    {
-        if (arbreRacineLettre(a) == end)
-        {
-            return 1 + dicoNbMotsDifferents(arbreFilsGauche(a)) + dicoNbMotsDifferents(arbreFilsDroit(a));
-        }
-
-        return dicoNbMotsDifferents(arbreFilsGauche(a)) + dicoNbMotsDifferents(arbreFilsDroit(a));
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-int dicoNbMotsTotal(TArbre a)
-{
-    int nb = 0;
-    if (arbreEstVide(a) == 0)
-    {
-        return 0;
-    }
-    else
-    {
-        if (a->lettre == '\0')
-        {
-            nb = nb + a->nb;
-        }
-    }
-    return nb + dicoNbMotsTotal(a->fg) + dicoNbMotsTotal(a->fd);
 }
 
 void dicoInsererMot(char mot[], TArbre *pa)
@@ -316,5 +135,80 @@ void dicoInsererMot(char mot[], TArbre *pa)
         {
             *pa = arbreCons(end, 1, NULL, NULL);
         }
+    }
+}
+
+int dicoNbOcc(char mot[], TArbre a)
+{
+    int i = 0, tmp = 0;
+    char end = '\0';
+
+    //comparer les noeuds à droite jusqu'à trouver la premiere lettre du mot
+    if (mot[i] != arbreRacineLettre(a))
+    {
+        while (!arbreEstVide(a) && mot[i] != arbreRacineLettre(a))
+        {
+            a = arbreFilsDroit(a);
+        }
+        if (arbreEstVide(a))
+        {
+            return 0;
+        }
+    }
+    //1er lettre trouvé, continuer à gauche
+    while (mot[i] != end && !arbreEstVide(a))
+    {
+
+        if (mot[i] != end)
+        {
+            if (mot[i] == arbreRacineLettre(a))
+            {
+                i++;
+                a = arbreFilsGauche(a);
+            }
+            else
+            {
+                a = arbreFilsDroit(a);
+            }
+        }
+    }
+    if (mot[i] == end)
+    {
+        return arbreRacineNbOcc(a);
+    }
+    return 0;
+}
+
+int dicoNbMotsDifferents(TArbre a)
+{
+    int nb = 0;
+    if (arbreEstVide(a) == 1)
+    {
+        return 0;
+    }
+    else
+    {
+        if (a->lettre == '\0')
+        {
+            nb++;
+        }
+    }
+    return nb + dicoNbMotsTotal(a->fg) + dicoNbMotsTotal(a->fd);
+}
+
+int dicoNbMotsTotal(TArbre a)
+{
+    int nb = 0;
+    if (arbreEstVide(a) == 1)
+    {
+        return 0;
+    }
+    else
+    {
+        if (a->lettre == '\0')
+        {
+            nb = nb + a->nb;
+        }
+        return nb + dicoNbMotsTotal(arbreFilsGauche(a)) + dicoNbMotsTotal(arbreFilsDroit(a));
     }
 }

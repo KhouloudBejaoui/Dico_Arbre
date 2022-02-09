@@ -7,21 +7,29 @@ int main(int argc, char **argv)
     TArbre dico;
     char buffer[100];
     dico = arbreConsVide();
-    
-   //dico= arbreCons('a', 0, NULL, NULL);
-    strcpy(buffer, "gallon");
-     dicoInsererMot(buffer, &dico);
-        strcpy(buffer, "all");
-         dicoInsererMot(buffer, &dico);
-            strcpy(buffer, "maison");
-                 dicoInsererMot(buffer, &dico);
-//strcpy(buffer, "maison");
+  int x=0, y=0, z=0;
 
-   // dicoInsererMot(buffer, &dico);
-    dicoAfficher(dico);
-    int x;
-    x= dicoNbMotsDifferents(dico);
-    printf("%d x=",x);
+    /*  strcpy(buffer, "gallon");
+        dicoInsererMot(buffer, &dico);
+        strcpy(buffer, "all");
+        dicoInsererMot(buffer, &dico);
+        strcpy(buffer, "maison");
+        dicoInsererMot(buffer, &dico);
+        strcpy(buffer, "maison");
+        dicoInsererMot(buffer, &dico);*/
+
+    if (piocherMot(&buffer))
+    {
+        dicoInsererMot(buffer, &dico);
+    }
+        dicoAfficher(dico);
+      
+        x = dicoNbOcc(buffer, dico);
+        y = dicoNbMotsDifferents(dico);
+        z = dicoNbMotsTotal(dico);
+        printf("%d\n x=", x);
+        printf("%d\n y=", y);
+        printf("%d\n z=", z);
     
 }
 

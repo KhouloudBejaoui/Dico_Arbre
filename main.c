@@ -6,9 +6,10 @@ int main(int argc, char **argv)
 {
     TArbre dico;
     char buffer[100];
+    dico = (TArbre)malloc(sizeof(struct noeud));
     dico = arbreConsVide();
-  int x=0, y=0, z=0;
-
+    //int x = 0, y = 0, z = 0;
+    char rep;
     /*  strcpy(buffer, "gallon");
         dicoInsererMot(buffer, &dico);
         strcpy(buffer, "all");
@@ -18,19 +19,42 @@ int main(int argc, char **argv)
         strcpy(buffer, "maison");
         dicoInsererMot(buffer, &dico);*/
 
-    if (piocherMot(&buffer))
+    /* while (rep != 'N')
+    { int j = piocherMot(&buffer);
+        if (j==1)
+        {
+            dicoInsererMot(buffer, &dico);
+            dicoAfficher(dico);
+
+            int x = dicoNbOcc(buffer, dico);
+            int y = dicoNbMotsDifferents(dico);
+            int z = dicoNbMotsTotal(dico);
+            printf("%d\n x=", x);
+            printf("%d\n y=", y);
+            printf("%d\n z=", z);
+        }
+            printf('voulez vous inserer un autre mot ?\n');
+            scanf("%c", &rep);  
+    }*/
+
+    while (rep != 'n')
     {
-        dicoInsererMot(buffer, &dico);
+        if (piocherMot(&buffer))
+        {
+            dicoInsererMot(buffer, &dico);
+            dicoAfficher(dico);
+            int z = dicoNbMotsDifferents(dico);
+            printf("nbr mot differents =%d", z - 1);
+            printf("\n");
+            int y = dicoNbMotsTotal(dico);
+            printf("nbr mot totale =%d ", y);
+        }
+        printf("\n voulez-vous inserer un autre mot?\n");
+        do
+        {
+            scanf("%c", &rep);
+        } while (rep != 'n' && rep != 'o');
     }
-        dicoAfficher(dico);
-      
-        x = dicoNbOcc(buffer, dico);
-        y = dicoNbMotsDifferents(dico);
-        z = dicoNbMotsTotal(dico);
-        printf("%d\n x=", x);
-        printf("%d\n y=", y);
-        printf("%d\n z=", z);
-    
 }
 
 /*int main(int argc, char **argv)

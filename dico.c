@@ -179,7 +179,7 @@ int dicoNbOcc(char mot[], TArbre a)
     return 0;
 }
 
-int dicoNbMotsDifferents(TArbre a)
+/*int dicoNbMotsDifferents(TArbre a)
 {
     int nb = 0;
     if (arbreEstVide(a) == 1)
@@ -194,9 +194,26 @@ int dicoNbMotsDifferents(TArbre a)
         }
     }
     return nb + dicoNbMotsTotal(a->fg) + dicoNbMotsTotal(a->fd);
+}*/
+int dicoNbMotsDifferents(TArbre a)
+{
+    char end = '\0';
+    if (!arbreEstVide(a))
+    {
+        if (arbreRacineLettre(a) == end)
+        {
+            return 1 + dicoNbMotsDifferents(arbreFilsGauche(a)) + dicoNbMotsDifferents(arbreFilsDroit(a));
+        }
+
+        return dicoNbMotsDifferents(arbreFilsGauche(a)) + dicoNbMotsDifferents(arbreFilsDroit(a));
+    }
+    else
+    {
+        return 0;
+    }
 }
 
-int dicoNbMotsTotal(TArbre a)
+/*int dicoNbMotsTotal(TArbre a)
 {
     int nb = 0;
     if (arbreEstVide(a) == 1)
@@ -210,5 +227,23 @@ int dicoNbMotsTotal(TArbre a)
             nb = nb + a->nb;
         }
         return nb + dicoNbMotsTotal(arbreFilsGauche(a)) + dicoNbMotsTotal(arbreFilsDroit(a));
+    }
+}*/
+int dicoNbMotsTotal(TArbre a)
+{
+    char end = '\0';
+    if (!arbreEstVide(a))
+    {
+        if (arbreRacineLettre(a) == end)
+        {
+
+            return arbreRacineNbOcc(a) + dicoNbMotsTotal(arbreFilsGauche(a)) + dicoNbMotsTotal(arbreFilsDroit(a));
+        }
+
+        return dicoNbMotsTotal(arbreFilsGauche(a)) + dicoNbMotsTotal(arbreFilsDroit(a));
+    }
+    else
+    {
+        return 0;
     }
 }

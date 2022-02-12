@@ -4,11 +4,7 @@
 TArbre arbreConsVide()
 {
     TArbre A;
-    A = (TArbre)malloc(sizeof(struct noeud));
-    A->lettre = NULL;
-    A->nb = NULL;
-    A->fg = NULL;
-    A->fd = NULL;
+    A=NULL;
     return A;
 }
 

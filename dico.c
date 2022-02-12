@@ -55,11 +55,9 @@ int piocherMot(char *motPioche)
 
 void afficherElements(char mot[], TArbre a)
 {
-    char end = '\0';
-
     if (a != NULL)
     {
-        if (arbreRacineLettre(a) != end)
+        if (arbreRacineLettre(a) != '\0')
         {
             if (a->fg != NULL)
             {
@@ -67,14 +65,14 @@ void afficherElements(char mot[], TArbre a)
             }
             if (a->fg != NULL)
             {
-                strcat(mot, (char[2]){arbreRacineLettre(a), end});
+                strcat(mot, (char[2]){arbreRacineLettre(a), '\0'});
                 afficherElements(mot, arbreFilsGauche(a));
             }
-            mot[strlen(mot) - 1] = end;
+            mot[strlen(mot) - 1] = '\0';
         }
         else
         {
-            printf("\"%s\"\n", mot);
+            printf("\n \t\t \"%s\"\n", mot);
             if (a->fd != NULL)
                 afficherElements(mot, arbreFilsDroit(a));
         }
@@ -83,17 +81,16 @@ void afficherElements(char mot[], TArbre a)
 
 void dicoAfficher(TArbre a)
 {
-    printf("\nListe des mots:\n");
+    printf("\n \t **** L'arbre contient ces mots: ****\n");
     char mots[255] = "";
     afficherElements(mots, a);
 }
 
 void dicoInsererMot(char mot[], TArbre *pa)
 {
-    char end = '\0';
     if (*pa != NULL)
     {
-        if (mot[0] != end)
+        if (mot[0] != '\0')
         {
             if ((*pa)->lettre == mot[0])
             {
@@ -113,19 +110,19 @@ void dicoInsererMot(char mot[], TArbre *pa)
                 }
             }
         }
-        else if ((*pa)->lettre != end && mot[0] == end)
+        else if ((*pa)->lettre != '\0' && mot[0] == '\0')
         {
-            TArbre a = arbreCons(end, 1, NULL, *pa);
+            TArbre a = arbreCons('\0', 1, NULL, *pa);
             *pa = a;
         }
-        else if ((*pa)->lettre == end && mot[0] == end)
+        else if ((*pa)->lettre == '\0' && mot[0] == '\0')
         {
             (*pa)->nb = (*pa)->nb + 1;
         }
     }
     else
     {
-        if (mot[0] != end)
+        if (mot[0] != '\0')
         {
             *pa = arbreCons(mot[0], 0, NULL, NULL);
             mot++;
@@ -133,7 +130,7 @@ void dicoInsererMot(char mot[], TArbre *pa)
         }
         else
         {
-            *pa = arbreCons(end, 1, NULL, NULL);
+            *pa = arbreCons('\0', 1, NULL, NULL);
         }
     }
 }
@@ -141,7 +138,6 @@ void dicoInsererMot(char mot[], TArbre *pa)
 int dicoNbOcc(char mot[], TArbre a)
 {
     int i = 0, tmp = 0;
-    char end = '\0';
 
     //comparer les noeuds à droite jusqu'à trouver la premiere lettre du mot
     if (mot[i] != arbreRacineLettre(a))
@@ -156,10 +152,10 @@ int dicoNbOcc(char mot[], TArbre a)
         }
     }
     //1er lettre trouvé, continuer à gauche
-    while (mot[i] != end && !arbreEstVide(a))
+    while (mot[i] != '\0' && !arbreEstVide(a))
     {
 
-        if (mot[i] != end)
+        if (mot[i] != '\0')
         {
             if (mot[i] == arbreRacineLettre(a))
             {
@@ -172,35 +168,18 @@ int dicoNbOcc(char mot[], TArbre a)
             }
         }
     }
-    if (mot[i] == end)
+    if (mot[i] == '\0')
     {
         return arbreRacineNbOcc(a);
     }
     return 0;
 }
 
-/*int dicoNbMotsDifferents(TArbre a)
-{
-    int nb = 0;
-    if (arbreEstVide(a) == 1)
-    {
-        return 0;
-    }
-    else
-    {
-        if (a->lettre == '\0')
-        {
-            nb++;
-        }
-    }
-    return nb + dicoNbMotsTotal(a->fg) + dicoNbMotsTotal(a->fd);
-}*/
 int dicoNbMotsDifferents(TArbre a)
 {
-    char end = '\0';
     if (!arbreEstVide(a))
     {
-        if (arbreRacineLettre(a) == end)
+        if (arbreRacineLettre(a) == '\0')
         {
             return 1 + dicoNbMotsDifferents(arbreFilsGauche(a)) + dicoNbMotsDifferents(arbreFilsDroit(a));
         }
@@ -213,7 +192,7 @@ int dicoNbMotsDifferents(TArbre a)
     }
 }
 
-/*int dicoNbMotsTotal(TArbre a)
+int dicoNbMotsTotal(TArbre a)
 {
     int nb = 0;
     if (arbreEstVide(a) == 1)
@@ -228,22 +207,5 @@ int dicoNbMotsDifferents(TArbre a)
         }
         return nb + dicoNbMotsTotal(arbreFilsGauche(a)) + dicoNbMotsTotal(arbreFilsDroit(a));
     }
-}*/
-int dicoNbMotsTotal(TArbre a)
-{
-    char end = '\0';
-    if (!arbreEstVide(a))
-    {
-        if (arbreRacineLettre(a) == end)
-        {
-
-            return arbreRacineNbOcc(a) + dicoNbMotsTotal(arbreFilsGauche(a)) + dicoNbMotsTotal(arbreFilsDroit(a));
-        }
-
-        return dicoNbMotsTotal(arbreFilsGauche(a)) + dicoNbMotsTotal(arbreFilsDroit(a));
-    }
-    else
-    {
-        return 0;
-    }
 }
+
